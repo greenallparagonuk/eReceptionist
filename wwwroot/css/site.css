@@ -1,6 +1,6 @@
 body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+    padding-top: 70px;
+    padding-bottom: 80px;
 }
 
 /* Wrapping element */
@@ -47,4 +47,54 @@ textarea {
     .carousel-caption {
         display: none;
     }
+}
+
+#StaffLogin {
+    height: 200px;
+    background-color: #9d9d9d;
+    padding-top: 55px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+#VisitorLogin {
+    height: 200px;
+    background-color: #9d9d9d;
+    padding-top: 55px;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+.StaffLoginName {
+    background-color: darkseagreen;
+    width: 50px;
+    float: right;
+    padding-left: 5px;
+}
+.StaffLogoutname {
+    background-color: chartreuse;
+    width: 50px;
+    float: right;
+    padding-left: 5px;
+}
+.StaffNamePanel {
+    padding: 10px 10px 10px 10px;
+}
+.VisitorLogDetailIn {
+    background-color: darkseagreen;
+    width: 180px;
+    float: right;
+    padding-left: 5px;
+}
+.VisitorLogDetailOut {
+    background-color: chartreuse;
+    width: 180px;
+    float: right;
+    padding-left: 5px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-width: 1170px;
+    height: 75px;
 }

@@ -1,0 +1,80 @@
+@{
+    ViewData["Title"] = "Visitor Home Page";
+}
+<div class="panel panel-default" style="width:310px">
+    <div class="panel-body">
+        Please search for your name <br/>
+        <div>
+            <input id="txtSearch" class="form-control" placeholder="Part of your name"/>
+        </div>
+        <div style="margin-top: 5px">
+            <input type="submit" value="Find" class="btn btn-default pull-right" id="btnSearch"/>
+        </div>
+    </div>    
+</div>
+<h2>Select your name</h2>
+<div id="grdContacts"></div>
+
+
+<script>
+    var counter = 0;
+    var textFilter = "error";
+    /*
+    var dataGrid = $('#grdContacts').dxDataGrid({
+            dataSource: '@Url.Content("~")VisitorSearch/'+textFilter
+        }).dxDataGrid("instance");
+        */
+    var dataGrid = $('#grdContacts').dxDataGrid({
+        dataSource: DevExpress.data.AspNet.createStore({
+                            loadUrl: "@Url.Action("VisitorSearch", "Visitor")",
+                            loadParams: { id: textFilter }
+                        }),
+        columns: ["name", {dataField: "ids", visible: false}],
+        selection: {
+            mode: "single"
+        },
+        hoverStateEnabled: true,
+        onSelectionChanged: function (selectedItems) {
+            var data = selectedItems.selectedRowsData[0];
+            if(data) {
+                window.location.href = '/Visitor/Login/'+data.ids;
+            }
+        }
+    }).dxDataGrid("instance");
+
+    $(function () {       
+        $('#txtSearch').change(function() {
+            counter = 0;
+        });
+        $('#btnSearch').click(function(){
+            counter = 0;
+            textFilter = $('#txtSearch').val();
+            //dataGrid.option('dataSource', '@Url.Content("~")VisitorSearch/'+textFilter);
+            //dataGrid.refresh();
+            source = new DevExpress.data.DataSource({ 			
+                "store": DevExpress.data.AspNet.createStore({ 				
+                    "key": "id", 				
+                    "loadUrl": "@Url.Action("VisitorSearch", "Visitor")", 				
+                    "loadParams": { "id": textFilter } 			
+                    }) 		
+                });   		
+            source.load() 			
+                .done(function (result) { 				
+                    dataGrid.option("dataSource", source); 			
+                }) 			
+                .fail(function (error) {     			
+                    alert(error); 			
+                }); 
+        });
+        setInterval(GoHome, 10000);
+        setInterval(TimerCount, 1000);
+        
+    })
+    function GoHome() {
+        if(counter > 30)
+            window.location.href = "@Url.Content("~/")";
+    }
+    function TimerCount() {
+        counter = counter + 1;
+    }
+</script>

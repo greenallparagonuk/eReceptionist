@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - eReceptionist</title>
-
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />        
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -15,37 +15,12 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <!-- DevExtreme themes -->
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.1.3/css/dx.common.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.1.3/css/dx.light.css" />
+    
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">eReceptionist</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
-                @await Html.PartialAsync("_LoginPartial")
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - eReceptionist</p>
-        </footer>
-    </div>
-
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -64,5 +39,47 @@
     </environment>
 
     @RenderSection("scripts", required: false)
+    <!-- A DevExtreme library -->
+    <script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.1.3/js/dx.all.js"></script>
+    
+    <script src="~/js/dx.aspnet.data.js"></script>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">eReceptionist</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="CompanyDetails" asp-action="Index">Your Company</a></li>
+                    <li><a asp-area="" asp-controller="Meetings" asp-action="Index">Meetings</a></li>
+                    <li><a asp-area="" asp-controller="Staff" asp-action="StaffLog">Staff Log</a></li>
+                    <li><a asp-area="" asp-controller="Visitor" asp-action="Companys">Visitors</a></li>
+                    <li><a asp-area="" asp-controller="Visitor" asp-action="VisitorLog">Visitors Log</a></li>
+                    <li><a asp-area="" asp-controller="Reports" asp-action="Fire">Fire Report</a></li>
+                </ul>
+                @await Html.PartialAsync("_LoginPartial")
+                
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()    
+        <div class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container">                
+                <p class="navbar-text pull-left">&copy; 2017 - eReceptionist</p>            
+            </div>        
+        </div>
+    </div>
+
+    
 </body>
 </html>

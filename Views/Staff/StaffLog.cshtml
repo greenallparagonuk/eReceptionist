@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Staff Log";
+}
+<h2>Staff Log</h2>
+<div id="grdStaffLog"></div>
+<script>
+    $(function() {
+        $("#grdStaffLog").dxDataGrid({
+            dataSource: '@Url.Content("~")GetStaffLog',
+            columnAutoWidth: true,
+            columns: [
+                { dataField: "name", caption: "Name"},
+                { dataField: "direction", caption: "Direction"},
+                { dataField: "now", caption: "When", sortOrder: "desc"}
+            ],
+            headerFilter: {
+                visible: true
+            }
+        });
+    })
+</script>

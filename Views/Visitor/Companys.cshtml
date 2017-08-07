@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Visitor Home Page";
+}
+<a asp-action="AddVisitorCompany" class="btn btn-default">Add Visitor Company</a>
+<div id="grdVisitorCompanys"></div>
+
+
+
+<script>
+    $(function(){
+        $("#grdVisitorCompanys").dxDataGrid({
+            dataSource: '@Url.Content("~")/Visitor/GetCompanys',
+            columnAutoWidth: true,
+            columns: [{dataField: "ids", visible: false}, "name"],
+            headerFilter: {
+                visible: true
+            },
+            selection: {
+                mode: "single"
+            },
+            hoverStateEnabled: true,
+            onSelectionChanged: function (selectedItems) {
+            var data = selectedItems.selectedRowsData[0];
+            if(data) {
+                //$(".employeeNotes").text(data.Notes);
+                //$(".employeePhoto").attr("src", data.Picture);
+                //alert(data.ids);
+                window.location.href = '/Visitor/Contacts/'+data.ids;
+            }
+        }
+        });
+    })
+</script>

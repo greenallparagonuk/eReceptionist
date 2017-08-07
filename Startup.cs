@@ -5,13 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using eReceptionist.Data;
 using eReceptionist.Models;
 using eReceptionist.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace eReceptionist
 {
@@ -40,18 +44,28 @@ namespace eReceptionist
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            //services.AddDbContext<ApplicationDbContext>(options =>
+            //    options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            //services.AddIdentity<ApplicationUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc(/*options => {
+                options.ModelBinderProviders.Insert(0, new ObjectIdBinder());
+            }*/);
 
             // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            //services.AddTransient<IEmailSender, AuthMessageSender>();
+            //services.AddTransient<ISmsSender, AuthMessageSender>();
+            //wrong
+            //services.AddTransient<ISendGridMessage, SendGridMessage>();
+            services.AddAuthentication(SharedOptions => SharedOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme);
+            //services.AddAuthorization();   
+
+            services.AddSingleton<DbContext>();         
+
+            services.AddScoped<SendGridMessage>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +73,28 @@ namespace eReceptionist
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCookieAuthentication();
+
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+            {
+                ClientId = Configuration["Authentication:AzureAd:ClientId"],
+                ClientSecret = Configuration["Authentication:AzureAd:ClientSecret"],
+                Authority = Configuration["Authentication:AzureAd:AADInstance"] + Configuration["Authentication:AzureAd:TenantId"],
+                CallbackPath = Configuration["Authentication:AzureAd:CallbackPath"],
+                ResponseType = OpenIdConnectResponseType.CodeIdToken
+            });
+
+            //CookieAuthenticationOptions p = o => { o.AuthenticationScheme = "Cookies"; };
+            /*var p = new CookieAuthenticationOptions()
+            {
+                AuthenticationScheme = "Cookies",
+                LoginPath = new PathString("/Account/Login/"),
+                CookieName = "eRecCookie",
+                AutomaticAuthenticate = false,
+                AutomaticChallenge = true
+
+            };*/
 
             if (env.IsDevelopment())
             {
@@ -73,7 +109,7 @@ namespace eReceptionist
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
+            //app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 

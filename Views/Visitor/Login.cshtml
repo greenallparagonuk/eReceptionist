@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Visitor Login";
+}
+<div>
+    Thank you for logging in.
+</div>
+@model IEnumerable<Meetings>
+<h4>Meeting Details</h4>
+@foreach(var item in Model)
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            Meeting With: @item.staffMemberName <br/>
+            Start Time: <div id="@item.ids"></div>            
+        </div>
+    </div>
+    <script>
+        $(function(){
+            $('#@item.ids').dxDateBox({
+                type: "time",
+                disabled: true,
+                value: new Date('@item.startDate')
+            });
+        })
+    </script>
+}
+<script>
+    $(function() {
+        setTimeout(function() {
+            window.location.href = "@Url.Content("~/")";
+        }, 30000);
+    })
+</script>

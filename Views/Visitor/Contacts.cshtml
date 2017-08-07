@@ -1,0 +1,20 @@
+@model VisitorCompany
+
+<h4>@Model.name</h4>
+<div>Contacts</div>
+<a asp-action="AddVisitor" asp-route-id="@Model.ids" class="btn btn-default">Add Contact</a>
+<table class="table">
+    <tr>
+        <td>Name</td>
+        <td>Email</td>
+        <td>Telephone</td>
+    </tr>
+@foreach(var item in Model.visitors)
+{
+    <tr>
+        <td>@item.name</td>
+        <td>@item.EmailAddress</td> 
+        <td>@item.Telephone</td>
+    </tr>
+}
+</table>

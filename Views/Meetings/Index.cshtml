@@ -1,0 +1,103 @@
+@{
+    ViewData["Title"] = "Visitor Home Page";
+}
+<div class="scheduler"></div>
+<script>
+    $(function(){
+        var CustCompanies, staff;
+        $.getJSON("/Visitor/GetCompanys", function (data) {
+            CustCompanies = data;
+        });
+        $.getJSON("/Staff/GetUsersJson", function (data) {
+            staff = data;
+        });
+        var data = DevExpress.data.AspNet.createStore({
+            key: "_id",
+            loadUrl: "@Url.Action("GetMeetings")",
+            insertUrl: "@Url.Action("AddMeeting")",
+            updateUrl: "@Url.Action("updateMeeting")"
+
+        });
+        var scheduler = $(".scheduler").dxScheduler({
+            dataSource: data,
+            views: ["agenda", "month", "week", "workWeek", "day"],
+            currentView: "workWeek",
+            currentDate: new Date(),
+            useDropDownViewSwitcher: false,
+            firstDayOfWeek: 0,
+            startDayHour: 8,
+            endDayHour: 19,            
+            width: "100%",
+            height: 600,
+            appointmentTemplate: function (itemData, itemIndex, itemElement) {
+                itemElement.append("<div class='customerCompany'>" + itemData.customerName + "</div>");
+                itemElement.append("<div class='apptSubject'>" + itemData.text + "</div>");
+                itemElement.append("<div class='staffMemeber'>" + itemData.staffMemberName + "</div>");
+            },
+            appointmentTooltipTemplate: function (data, container) {
+                var markup = $("<div class='apptToolTip'>" +
+                    "<div><label>Customer</label> " + data.customerName + "</div>" +
+                    "<div><label>Subject</label> " + data.text + "</div>" +
+                    "<div><label>Staff member</label> " + data.staffMemberName + "</div>" +
+                    "<div><label>Description</label> " + data.description + "</div>" +
+                    "</div>");
+                return markup;
+            },
+            onAppointmentFormCreated: function (data) {
+                var form = data.form;
+                form.option("items", [{
+                    label: { text: "Customer Company" },
+                    name: "customerId",
+                    editorType: "dxSelectBox",
+                    dataField: "customerId",
+                    editorOptions: {
+                        items: CustCompanies,
+                        displayExpr: "name",
+                        valueExpr: "ids"
+                    }
+                },                    
+                    {
+                        label: { text: "Staff member to see" },                        
+                        editorType: "dxSelectBox",
+                        dataField: "staffMember",
+                        editorOptions: {
+                            items: staff,
+                            displayExpr: "displayName",
+                            //valueExpr: "objectId"
+                            valueExpr: "displayName"
+                        }
+                    },
+                    {
+                        label: { text: "Subject" },
+                        dataField: "text",
+                        name: "text",
+                        editorType: "dxTextBox",
+                        editorOptions: {
+                            value: data.appointmentData.text
+                        }
+                    },
+                    {
+                        dataField: "startDate",
+                        editorType: "dxDateBox",
+                        editorOptions: {
+                            type: "datetime",
+                            width: "200px"
+                        }
+                    },
+                    {
+                        dataField: "endDate",
+                        editorType: "dxDateBox",
+                        editorOptions: {
+                            type: "datetime",
+                            width: "200px"
+                        }
+                    },
+                    {
+                        dataField: "description",
+                        editorType: "dxTextArea"
+                    }
+                ])
+            }
+        }).dxScheduler("instance");
+    })
+</script>

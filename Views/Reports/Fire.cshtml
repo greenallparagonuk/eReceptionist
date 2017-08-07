@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "Fire Alarm Report";
+}
+<h2>Fire Alarm Report</h2>
+<h3>Visitors Logged In</h3>
+<div id="grdVisitors"></div>
+<h3>Staff Members Logged In</h3>
+<div id="grdStaff"></div>
+
+<script>
+    var visitorDataGrid = $('#grdVisitors').dxDataGrid({
+        dataSource: DevExpress.data.AspNet.createStore({
+                            loadUrl: "@Url.Action("VisitorsIn")"
+                        }),
+        columns: [{ 
+                caption: "Visitor Name",
+                dataField: "id"
+            }, 
+            {
+                caption: "Log Time",
+                width: 230,
+                sortOrder: "desc",
+                //fixed: true,
+                calculateCellValue: function(data) {
+                    var valueDate = new Date(data.lastlog);
+                    return pad(valueDate.getHours())+":"+pad(valueDate.getMinutes());
+                }
+        }],
+        columnAutoWidth: true
+    }).dxDataGrid("instance");
+    var staffDataGrid = $('#grdStaff').dxDataGrid({
+        dataSource: DevExpress.data.AspNet.createStore({
+                            loadUrl: "@Url.Action("StaffIn")"
+                        }),
+        columns: [{ 
+                caption: "Staff Members Name",
+                dataField: "id"
+            }, 
+            {
+                caption: "Log Time",
+                width: 230,
+                sortOrder: "desc",
+                //fixed: true,
+                calculateCellValue: function(data) {
+                    var valueDate = new Date(data.lastlog);
+                    return pad(valueDate.getHours())+":"+pad(valueDate.getMinutes());
+                }
+        }],
+        columnAutoWidth: true
+    }).dxDataGrid("instance");
+    function pad(n) {
+        return (n < 10) ? ("0" + n) : n;
+    }
+</script>

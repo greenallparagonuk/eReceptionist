@@ -1,0 +1,82 @@
+@{
+    ViewData["Title"] = "Staff Login";
+}
+@model IEnumerable<OrgValues>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<div class="row">
+    @foreach (var item in Model)
+    {
+
+        <div class="col-md-3">
+            @if (item.LogDesc == "Logged Out" || item.LogDesc == null)
+            {
+                @*<img src="@item.ImageLocation" onclick="PersonClicked('@item._id')" />*@
+                <div class="panel panel-default StaffNamePanel" onclick="PersonClicked('@item.objectId')">
+                    @Html.DisplayFor(modelItem => item.displayName) <div class="StaffLoginName">Out</div>
+                </div>
+            }
+            else
+            {
+                @*<img src="@item.ImageLocation" onclick="PersonClickedOut('@item._id')" />*@
+                <div class="panel panel-default StaffNamePanel" onclick="PersonClickedOut('@item.objectId')">
+                    @Html.DisplayFor(modelItem => item.displayName) <div class="StaffLogoutname">In</div>
+                </div>
+            }
+            
+            @if (User.Identity.IsAuthenticated)
+            {
+                @Html.ActionLink("Edit", "Edit", "People", new { id = item.displayName }, new { @class = "btn btn-default" })
+                @Html.ActionLink("Delete", "Delete", "People", new { id = item.objectId }, new { @class = "btn btn-default" })
+            }
+        </div>
+
+
+    }
+</div>
+<script>
+    function PersonClicked(personId) {
+        $.ajax({
+            url: '@Url.Content("~")Login',
+            type: 'POST',
+            data: { id: personId },
+            success: function () {
+                toastr.info('You have logged in thank you.');
+                setTimeout(GoHome, 5000);
+            }
+        });
+    }
+    function PersonClickedOut(personId) {
+        $.ajax({
+            url: '@Url.Content("~")Logout',
+            type: 'POST',
+            data: { id: personId },
+            success: function () {
+                toastr.info('You have logged out thank you.');
+                setTimeout(GoHome, 5000);
+            }
+        });
+    }
+    $(function () {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        setTimeout(GoHome, 30000);
+    })
+    function GoHome() {
+        window.location.href = "@Url.Content("~/")";
+    }
+</script>

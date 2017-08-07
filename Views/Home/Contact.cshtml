@@ -1,17 +1,34 @@
 @{
     ViewData["Title"] = "Contact";
 }
-<h2>@ViewData["Title"].</h2>
+@model IEnumerable<OrgValues>
 <h3>@ViewData["Message"]</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
+@foreach(var item in Model)
+{
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-sm-4"><label>Name:</label>@item.displayName</div>
+                <div class="col-sm-2"><label>Tel:</label>@item.telephoneNumber</div>
+                <div class="col-sm-2"><label>Mob:</label>@item.mobile</div>
+            </div>
+        </div>
+    </div>
+}
 
-<address>
-    <strong>Support:</strong> <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+<script>
+    var counter = 0;
+    var textFilter = "";    
+    $(function () {               
+        setInterval(GoHome, 10000);
+        setInterval(TimerCount, 1000);        
+    })
+    function GoHome() {
+        if(counter > 60)
+            window.location.href = "@Url.Content("~/")";
+    }
+    function TimerCount() {
+        counter = counter + 1;
+    }
+</script>

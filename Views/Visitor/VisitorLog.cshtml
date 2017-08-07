@@ -1,0 +1,28 @@
+@{
+    ViewData["Title"] = "Visitor Log";
+}
+<h3>Todays Visitor Log</h3>
+<div id="grdVisitorLog"></div>
+<script>
+    var textFilter = "today";
+    var dataGrid = $('#grdVisitorLog').dxDataGrid({
+        dataSource: DevExpress.data.AspNet.createStore({
+                            loadUrl: "@Url.Action("GetVisitorLog", "Visitor")",
+                            loadParams: { id: textFilter }
+                        }),
+        columns: ["name", "direction", //"now", 
+            {
+                caption: "Log Time",
+                width: 230,
+                sortOrder: "desc",
+                //fixed: true,
+                calculateCellValue: function(data) {
+                    var valueDate = new Date(data.now);
+                    return pad(valueDate.getHours())+":"+pad(valueDate.getMinutes());
+                }
+        }]
+    }).dxDataGrid("instance");
+    function pad(n) {
+        return (n < 10) ? ("0" + n) : n;
+    }
+</script>
